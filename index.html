@@ -609,7 +609,7 @@
           height:calc(var(--deck-thumb-h) + 80px);
           margin-top:40px;
           overflow:visible;
-          padding:0 20px;
+          padding:0 30px;
           min-height: 240px;
         }
         
@@ -681,7 +681,7 @@
           .works-deck .deck{
             height:calc(var(--deck-thumb-h) + 60px);
             margin-top:30px;
-            padding:0 10px;
+            padding:0 20px;
             min-height: 190px;
           }
           
@@ -1173,7 +1173,7 @@
         function layoutDeck(){
           const deck = document.getElementById('deck');
           const container = deck.parentElement;
-          const W = Math.min(container.clientWidth - 40, 1200); // 最大幅制限
+          const W = container.clientWidth - 60; // パディングを増やす
           const n = WORKS.items.length;
           if(n===0) return;
 
@@ -1181,14 +1181,22 @@
           const overlap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--deck-overlap')) || 90;
 
           const total = tw + (n-1)*overlap;
-          const left0 = Math.max(20, (W-total)/2);   // 中央寄せ
+          
+          // 画面幅に収まらない場合は重なりを調整
+          let actualOverlap = overlap;
+          if (total > W) {
+            actualOverlap = Math.max(40, (W - tw) / (n-1)); // 最小40px重なり
+          }
+          
+          const actualTotal = tw + (n-1)*actualOverlap;
+          const left0 = Math.max(30, (W-actualTotal)/2); // 左右マージン確保
 
           WORKS.positions = [];
           document.querySelectorAll('#deck .thumb').forEach((el, i)=>{
-            const left = Math.max(0, left0 + i*overlap); // 最小値0で制限
+            const left = left0 + i*actualOverlap;
             el.style.left = left + 'px';
             el.style.zIndex = 10 + i;
-            // 軽い傾きで重なり感（範囲を狭める）
+            // 軽い傾きで重なり感
             const rot = Math.max(-2, Math.min(2, (i - (n-1)/2) * 0.3));
             el.style.transform = `rotate(${rot}deg)`;
             WORKS.positions.push(left + tw/2); // 中心座標
