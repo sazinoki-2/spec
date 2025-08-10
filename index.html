@@ -350,57 +350,51 @@
             transform: translateX(-50%);
         }
 
-        /* Works Grid - Masonry Style */
+        /* Works Grid - Full Screen Alternating */
         .works-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-            gap: 3rem 2rem;
-            margin-top: 5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8rem;
+            margin-top: 6rem;
         }
 
         .work-card {
-            background: var(--surface);
-            border-radius: var(--border-radius-large);
-            overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 4rem;
+            min-height: 80vh;
+            background: transparent;
+            border: none;
+            box-shadow: none;
             transition: var(--transition-slow);
             position: relative;
             cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        [data-theme="dark"] .work-card {
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        /* 偶数番目は逆順 */
+        .work-card:nth-child(even) {
+            grid-template-columns: 1fr 1fr;
+            direction: rtl;
         }
 
-        .work-card:hover {
-            transform: translateY(-15px) scale(1.02);
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
-        }
-
-        [data-theme="dark"] .work-card:hover {
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+        .work-card:nth-child(even) > * {
+            direction: ltr;
         }
 
         .work-image {
             position: relative;
-            height: 350px;
+            height: 70vh;
+            max-height: 800px;
+            min-height: 500px;
             overflow: hidden;
             background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: var(--border-radius-large);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
         }
 
-        /* Dynamic height based on content */
-        .work-card:nth-child(3n+1) .work-image {
-            height: 400px;
-        }
-
-        .work-card:nth-child(3n+2) .work-image {
-            height: 320px;
-        }
-
-        .work-card:nth-child(3n+3) .work-image {
-            height: 380px;
+        [data-theme="dark"] .work-image {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
         }
 
         .work-image img {
@@ -411,8 +405,13 @@
             filter: brightness(1.05) saturate(1.1);
         }
 
+        .work-card:hover .work-image {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+        }
+
         .work-card:hover .work-image img {
-            transform: scale(1.12) rotate(1deg);
+            transform: scale(1.08);
             filter: brightness(1.1) saturate(1.2);
         }
 
@@ -462,50 +461,59 @@
         }
 
         .work-content {
-            padding: 2rem;
+            padding: 4rem 2rem;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 50vh;
         }
 
         .work-content::before {
             content: '';
             position: absolute;
             top: 0;
-            left: 50%;
-            width: 30px;
-            height: 3px;
+            left: 0;
+            width: 60px;
+            height: 4px;
             background: var(--accent);
-            transform: translateX(-50%);
             border-radius: 2px;
         }
 
         .work-title {
-            font-size: 1.4rem;
+            font-size: clamp(2rem, 4vw, 3.5rem);
             font-weight: var(--font-weight-bold);
-            margin: 1rem 0 0.8rem;
+            margin: 2rem 0 1.5rem;
             color: var(--text-primary);
-            line-height: 1.3;
+            line-height: 1.2;
         }
 
         .work-description {
             color: var(--text-secondary);
-            line-height: 1.7;
-            font-size: 0.95rem;
+            line-height: 1.8;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            margin-bottom: 2rem;
         }
 
         .work-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 1rem;
+            gap: 0.75rem;
         }
 
         .work-tag {
             background: var(--accent);
             color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
+            padding: 0.5rem 1.25rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
             font-weight: var(--font-weight-medium);
+            transition: var(--transition);
+        }
+
+        .work-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
         }
 
         /* Floating elements */
@@ -661,18 +669,32 @@
             }
 
             .works-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
+                gap: 4rem;
             }
 
-            .work-card:nth-child(3n+1) .work-image,
-            .work-card:nth-child(3n+2) .work-image,
-            .work-card:nth-child(3n+3) .work-image {
-                height: 280px;
+            .work-card {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                min-height: auto;
+            }
+
+            .work-card:nth-child(even) {
+                grid-template-columns: 1fr;
+                direction: ltr;
+            }
+
+            .work-image {
+                height: 50vh;
+                min-height: 300px;
             }
 
             .work-content {
-                padding: 1.5rem;
+                padding: 2rem 1.5rem;
+                min-height: auto;
+            }
+
+            .work-title {
+                font-size: clamp(1.5rem, 6vw, 2.5rem);
             }
 
             .hero-cta {
