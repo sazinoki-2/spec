@@ -407,10 +407,11 @@
             SITE_TITLE: 'Portfolio',
             CONTACT_EMAIL: 'contact@example.com',
             HEADER_BG: '', // Background image URL or empty for gradient
-            SERVICE: '', // microCMS service name
+            SERVICE: 'sazinoki', // microCMS service name
             ENDPOINT: 'spec',
             PROFILE_ENDPOINT: 'profile',
-            API_KEY: '' // Content API key - set this value
+            API_KEY: 'HWkDindxY1SLQ4QAXzIP1PjvpXXcNYDg', // Content API key
+            SKIP_PROFILE: true // Skip profile API for now
         };
 
         // Dummy data for fallback
@@ -570,11 +571,21 @@
 
         async function loadData() {
             try {
-                // Load profile and works in parallel
-                const [profileResponse, worksResponse] = await Promise.allSettled([
-                    fetchMicroCMS(CONFIG.PROFILE_ENDPOINT),
-                    fetchMicroCMS(CONFIG.ENDPOINT)
-                ]);
+                // Load profile and works
+                let profileResponse, worksResponse;
+                
+                if (CONFIG.SKIP_PROFILE) {
+                    profileResponse = { status: 'rejected', reason: 'Skipped' };
+                    worksResponse = await Promise.allSettled([fetchMicroCMS(CONFIG.ENDPOINT)]);
+                    worksResponse = worksResponse[0];
+                } else {
+                    const [pResponse, wResponse] = await Promise.allSettled([
+                        fetchMicroCMS(CONFIG.PROFILE_ENDPOINT),
+                        fetchMicroCMS(CONFIG.ENDPOINT)
+                    ]);
+                    profileResponse = pResponse;
+                    worksResponse = wResponse;
+                }
 
                 if (profileResponse.status === 'fulfilled') {
                     profileData = profileResponse.value;
@@ -597,7 +608,9 @@
                 }
 
                 isDataLoaded = true;
-                hideError();
+                if (worksResponse.status === 'fulfilled' && worksData.length > 0) {
+                    hideError();
+                }
             } catch (error) {
                 console.error('Data loading failed:', error);
                 profileData = DUMMY_PROFILE;
