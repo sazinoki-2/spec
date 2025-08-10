@@ -696,16 +696,24 @@
 
         const DUMMY_WORKS = [
             {
-                text: 'Digital Illustration',
+                text: 'あめだわだｗｄ',
+                description: 'キュートなピンク髪キャラクターのイラストレーション。鮮やかな色彩と表情豊かな描写が特徴的な作品です。',
                 gazou: { url: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="%23667eea"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="16" fill="white" font-family="system-ui">Illustration</text></svg>' }
             },
             {
-                text: 'Character Design',
+                text: '表紙を制作しました',
+                description: 'ブロンドヘアキャラクターの魅力的な表紙イラスト。黄色とオレンジの暖かい色調で親しみやすさを表現しています。',
                 gazou: { url: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="%23764ba2"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="16" fill="white" font-family="system-ui">Character</text></svg>' }
             },
             {
-                text: 'Game Art',
+                text: 'だわｗｄ',
+                description: 'エネルギッシュなピンク髪キャラクターのイラスト。動きのある構図と明るい色彩でポップな印象を与える作品です。',
                 gazou: { url: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="%234a90e2"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="16" fill="white" font-family="system-ui">Game Art</text></svg>' }
+            },
+            {
+                text: 'ほいあどえしぼｄｗじょじょ@',
+                description: '青と水色のグラデーションが美しい幻想的なアートワーク。デジタル技術を駆使した現代的なイラストレーションです。',
+                gazou: { url: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="%236c5ce7"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="16" fill="white" font-family="system-ui">Fantasy Art</text></svg>' }
             }
         ];
 
@@ -854,7 +862,10 @@
                 workCard.style.transitionDelay = `${index * 0.15}s`;
                 
                 const imageUrl = getImageUrl(work);
-                const description = work.description || work.desc || '素晴らしいアートワークとクリエイティブなデザインをお楽しみください。';
+                // より多くのフィールド名をサポート
+                const description = work.description || work.desc || work.detail || work.content || 
+                                  (work.text && work.text !== (work.title || `作品 ${index + 1}`) ? work.text : '') || 
+                                  '素晴らしいアートワークとクリエイティブなデザインをお楽しみください。';
                 
                 workCard.innerHTML = `
                     <div class="work-image">
