@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Updated: 2025-08-10 with 16:9 Aspect Ratio Optimized Layout -->
+<!-- Updated: 2025-08-10 with Modern Rich Card Gallery Layout -->
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -545,12 +545,208 @@
         .work-card:nth-child(5) { animation-delay: 0.4s; }
         .work-card:nth-child(6) { animation-delay: 0.5s; }
 
-        /* ===== Works: deck-style (横重なり＋フォーカス拡大) ===== */
+        /* ===== Works: Modern Rich Gallery ===== */
         :root{
-          --stage-h: 70vh;
-          --deck-thumb-w: 240px;
-          --deck-thumb-h: 160px;
-          --deck-overlap: 90px;
+          --gallery-gap: clamp(16px, 3vw, 32px);
+          --card-radius: 24px;
+          --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+          --card-shadow-hover: 0 20px 64px rgba(0, 0, 0, 0.2);
+        }
+
+        .works-rich {
+          padding: 6rem 0;
+          background: var(--surface);
+        }
+
+        [data-theme="dark"] .works-rich {
+          background: #0a0a0f;
+        }
+        
+        .works-masonry {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+          gap: var(--gallery-gap);
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 0 2rem;
+        }
+        
+        .work-card-rich {
+          background: var(--background);
+          border-radius: var(--card-radius);
+          overflow: hidden;
+          box-shadow: var(--card-shadow);
+          transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+          cursor: pointer;
+          position: relative;
+          border: 1px solid var(--border);
+        }
+
+        [data-theme="dark"] .work-card-rich {
+          background: #1a1a24;
+          border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .work-card-rich:hover {
+          transform: translateY(-12px) scale(1.02);
+          box-shadow: var(--card-shadow-hover);
+          border-color: var(--accent);
+        }
+
+        .work-image-container {
+          position: relative;
+          width: 100%;
+          min-height: 240px;
+          max-height: 500px;
+          overflow: hidden;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .work-image-container img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          object-position: center;
+          transition: transform 0.6s ease;
+        }
+        
+        .work-card-rich:hover .work-image-container img {
+          transform: scale(1.05);
+        }
+        
+        .work-overlay-modern {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(
+            135deg,
+            rgba(102, 126, 234, 0.95) 0%,
+            rgba(118, 75, 162, 0.95) 50%,
+            rgba(74, 144, 226, 0.95) 100%
+          );
+          opacity: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.4s ease;
+          backdrop-filter: blur(8px);
+        }
+        
+        .work-card-rich:hover .work-overlay-modern {
+          opacity: 1;
+        }
+        
+        .work-overlay-content-modern {
+          text-align: center;
+          color: white;
+          transform: translateY(20px);
+          transition: transform 0.4s ease;
+        }
+        
+        .work-card-rich:hover .work-overlay-content-modern {
+          transform: translateY(0);
+        }
+        
+        .work-overlay-title {
+          font-size: 1.5rem;
+          font-weight: var(--font-weight-bold);
+          margin-bottom: 0.5rem;
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .work-overlay-desc {
+          font-size: 0.95rem;
+          opacity: 0.9;
+          max-width: 200px;
+          margin: 0 auto;
+        }
+        
+        .work-content-modern {
+          padding: 2rem;
+          position: relative;
+        }
+        
+        .work-content-modern::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 2rem;
+          right: 2rem;
+          height: 4px;
+          background: var(--accent);
+          border-radius: 2px;
+        }
+        
+        .work-title-modern {
+          font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+          font-weight: var(--font-weight-bold);
+          margin: 1rem 0 0.75rem;
+          color: var(--text-primary);
+          line-height: 1.3;
+        }
+        
+        .work-description-modern {
+          color: var(--text-secondary);
+          line-height: 1.7;
+          font-size: 1rem;
+          margin-bottom: 1.5rem;
+        }
+        
+        .work-tags-modern {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+        }
+        
+        .work-tag-modern {
+          background: rgba(102, 126, 234, 0.1);
+          color: var(--accent);
+          padding: 0.4rem 1rem;
+          border-radius: 20px;
+          font-size: 0.85rem;
+          font-weight: var(--font-weight-medium);
+          border: 1px solid rgba(102, 126, 234, 0.2);
+          transition: all 0.3s ease;
+        }
+        
+        .work-tag-modern:hover {
+          background: var(--accent);
+          color: white;
+          transform: translateY(-2px);
+        }
+
+        /* 縦長画像専用の高さ調整 */
+        .work-card-rich.tall {
+          grid-row: span 2;
+        }
+
+        .work-card-rich.tall .work-image-container {
+          min-height: 400px;
+          max-height: 600px;
+        }
+
+        /* モバイル対応 */
+        @media (max-width: 768px) {
+          .works-masonry {
+            grid-template-columns: 1fr;
+            padding: 0 1rem;
+          }
+          
+          .work-content-modern {
+            padding: 1.5rem;
+          }
+          
+          .work-image-container {
+            min-height: 200px;
+            max-height: 400px;
+          }
+          
+          .work-card-rich.tall .work-image-container {
+            min-height: 300px;
+            max-height: 500px;
+          }
         }
         
         .works-deck {
@@ -946,17 +1142,12 @@
     </section>
 
     <!-- Works Section -->
-    <section id="works" class="section works-deck" aria-label="Works">
+    <section id="works" class="section works-rich" aria-label="Works">
         <div class="container">
-            <h2 class="section-title fade-in">Works</h2>
-            <div class="stage" id="stage">
-                <img id="stageImg" alt="" src="">
-                <div class="caption">
-                    <div class="cap-title" id="stageTitle">Title</div>
-                    <div class="cap-desc" id="stageDesc">一行の説明がここに入ります。</div>
-                </div>
+            <h2 class="section-title fade-in">Featured Works</h2>
+            <div class="works-masonry" id="works-masonry">
+                <!-- Works cards will be populated by JavaScript -->
             </div>
-            <div class="deck" id="deck" aria-label="Thumbnails (hover or move pointer to switch)"></div>
         </div>
     </section>
 
@@ -1265,17 +1456,87 @@
           window.addEventListener('resize', resizeHandler);
         }
 
-        // 既存の fetchWorks 呼び出しを、この deck 用に差し替え
-        async function fetchWorksDeck(){
-          if(!CONFIG.API_KEY){ showError("APIキー未設定のため、作品はダミー表示です。設定ブロックの API_KEY を入力してください。"); initDeck([]); return; }
-          try{
-            const res = await fetch(`https://${CONFIG.SERVICE}.microcms.io/api/v1/${CONFIG.ENDPOINT}`, { headers:{ "X-MICROCMS-API-KEY": CONFIG.API_KEY }});
-            if(!res.ok) throw new Error(res.status+" "+res.statusText);
+        // Modern Rich Gallery Rendering
+        function renderWorksModern() {
+            const container = document.getElementById('works-masonry');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            const works = worksData.length > 0 ? worksData : DUMMY_WORKS;
+            
+            works.forEach((work, index) => {
+                const card = document.createElement('div');
+                card.className = 'work-card-rich fade-in';
+                card.style.animationDelay = `${index * 0.1}s`;
+                
+                const imageUrl = getImageUrl(work);
+                const title = work.text || `Untitled Work ${index + 1}`;
+                const description = work.description || 'クリエイティブなイラストレーション作品です。';
+                
+                // 画像の縦横比を推定して縦長カードを決定
+                const isVertical = work.gazou && work.gazou.height && work.gazou.width && 
+                                  (work.gazou.height / work.gazou.width) > 1.2;
+                                  
+                if (isVertical) {
+                    card.classList.add('tall');
+                }
+                
+                card.innerHTML = `
+                    <div class="work-image-container">
+                        <img src="${imageUrl}" alt="${title}" loading="lazy" decoding="async">
+                        <div class="work-overlay-modern">
+                            <div class="work-overlay-content-modern">
+                                <div class="work-overlay-title">${title}</div>
+                                <div class="work-overlay-desc">${description.substring(0, 60)}...</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="work-content-modern">
+                        <h3 class="work-title-modern">${title}</h3>
+                        <p class="work-description-modern">${description}</p>
+                        <div class="work-tags-modern">
+                            <span class="work-tag-modern">Illustration</span>
+                            <span class="work-tag-modern">Digital Art</span>
+                            <span class="work-tag-modern">Creative</span>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        async function fetchWorksModern(){
+          try {
+            if (!CONFIG.API_KEY) {
+                showError("APIキー未設定のため、作品はダミー表示です。");
+                renderWorksModern();
+                return;
+            }
+            
+            const res = await fetch(`https://${CONFIG.SERVICE}.microcms.io/api/v1/${CONFIG.ENDPOINT}`, { 
+                headers: { "X-MICROCMS-API-KEY": CONFIG.API_KEY }
+            });
+            
+            if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+            
             const data = await res.json();
-            const items = Array.isArray(data.contents)? data.contents : [];
-            initDeck(items);
-          }catch(e){
-            console.error(e); showError("作品の読込に失敗しました（ダミー表示）"); initDeck([]);
+            worksData = Array.isArray(data.contents) ? data.contents : [];
+            
+            if (worksData.length === 0) {
+                worksData = DUMMY_WORKS;
+                showError("作品データがありません。サンプルデータを表示しています。");
+            } else {
+                hideError();
+            }
+            
+            renderWorksModern();
+          } catch(e) {
+            console.error(e);
+            worksData = DUMMY_WORKS;
+            showError("作品の読込に失敗しました：" + e.message);
+            renderWorksModern();
           }
         }
 
@@ -1423,7 +1684,7 @@
             try {
                 await loadData();
                 renderProfile();
-                fetchWorksDeck();
+                fetchWorksModern();
                 renderBlog();
                 
                 initTheme();
