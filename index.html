@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Updated: 2025-08-10 with Fullscreen Modal Image Gallery -->
+<!-- Updated: 2025-08-10 with Alternating Scroll Gallery Layout -->
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -555,42 +555,105 @@
 
         .works-rich {
           padding: 6rem 0;
-          background: var(--surface);
+          background: var(--background);
         }
 
         [data-theme="dark"] .works-rich {
           background: #0a0a0f;
         }
         
-        .works-masonry {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-          gap: var(--gallery-gap);
+        .works-alternating {
           max-width: 1400px;
           margin: 0 auto;
           padding: 0 2rem;
         }
         
-        .work-card-rich {
-          background: var(--background);
-          border-radius: var(--card-radius);
-          overflow: hidden;
-          box-shadow: var(--card-shadow);
-          transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-          cursor: pointer;
-          position: relative;
-          border: 1px solid var(--border);
+        .work-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 4rem;
+          align-items: center;
+          margin-bottom: 8rem;
+          min-height: 80vh;
+          opacity: 0;
+          transform: translateY(60px);
+          transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        [data-theme="dark"] .work-card-rich {
-          background: #1a1a24;
-          border-color: rgba(255, 255, 255, 0.1);
+        .work-row.visible {
+          opacity: 1;
+          transform: translateY(0);
         }
-        
-        .work-card-rich:hover {
-          transform: translateY(-12px) scale(1.02);
+
+        .work-row.reverse {
+          direction: rtl;
+        }
+
+        .work-row.reverse > * {
+          direction: ltr;
+        }
+
+        .work-image-section {
+          position: relative;
+          cursor: pointer;
+        }
+
+        .work-image-large {
+          width: 100%;
+          height: auto;
+          min-height: 400px;
+          max-height: 600px;
+          object-fit: contain;
+          border-radius: var(--card-radius);
+          box-shadow: var(--card-shadow);
+          transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+          background: var(--surface);
+        }
+
+        [data-theme="dark"] .work-image-large {
+          background: #1a1a24;
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .work-image-large:hover {
+          transform: translateY(-8px) scale(1.02);
           box-shadow: var(--card-shadow-hover);
-          border-color: var(--accent);
+        }
+
+        .work-content-section {
+          padding: 2rem 0;
+        }
+
+        .work-title-large {
+          font-size: clamp(2rem, 5vw, 3.5rem);
+          font-weight: var(--font-weight-bold);
+          margin-bottom: 1.5rem;
+          color: var(--text-primary);
+          line-height: 1.2;
+        }
+
+        .work-description-large {
+          font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+          color: var(--text-secondary);
+          line-height: 1.8;
+          margin-bottom: 2rem;
+        }
+
+        .work-index {
+          position: absolute;
+          top: -1rem;
+          left: -1rem;
+          background: var(--accent);
+          color: white;
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.5rem;
+          font-weight: var(--font-weight-bold);
+          box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
         }
 
         .work-image-container {
@@ -797,19 +860,38 @@
 
         /* モバイル対応 */
         @media (max-width: 768px) {
-          .works-masonry {
-            grid-template-columns: 1fr;
+          .works-alternating {
             padding: 0 1rem;
           }
-          
-          .work-image-container {
-            min-height: 200px;
-            max-height: 400px;
+
+          .work-row {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 6rem;
+            min-height: auto;
           }
-          
-          .work-card-rich.tall .work-image-container {
+
+          .work-row.reverse {
+            direction: ltr;
+          }
+
+          .work-image-large {
             min-height: 300px;
-            max-height: 500px;
+            max-height: 450px;
+          }
+
+          .work-title-large {
+            font-size: clamp(1.8rem, 8vw, 2.5rem);
+          }
+
+          .work-description-large {
+            font-size: 1.1rem;
+          }
+
+          .work-index {
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
           }
 
           .modal-close {
@@ -1217,8 +1299,8 @@
     <section id="works" class="section works-rich" aria-label="Works">
         <div class="container">
             <h2 class="section-title fade-in">Featured Works</h2>
-            <div class="works-masonry" id="works-masonry">
-                <!-- Works cards will be populated by JavaScript -->
+            <div class="works-alternating" id="works-alternating">
+                <!-- Works rows will be populated by JavaScript -->
             </div>
         </div>
     </section>
@@ -1534,9 +1616,9 @@
           window.addEventListener('resize', resizeHandler);
         }
 
-        // Modern Rich Gallery Rendering
-        function renderWorksModern() {
-            const container = document.getElementById('works-masonry');
+        // Alternating Layout Rendering
+        function renderWorksAlternating() {
+            const container = document.getElementById('works-alternating');
             if (!container) return;
             
             container.innerHTML = '';
@@ -1544,45 +1626,36 @@
             const works = worksData.length > 0 ? worksData : DUMMY_WORKS;
             
             works.forEach((work, index) => {
-                const card = document.createElement('div');
-                card.className = 'work-card-rich fade-in';
-                card.style.animationDelay = `${index * 0.1}s`;
+                const row = document.createElement('div');
+                row.className = `work-row ${index % 2 === 1 ? 'reverse' : ''}`;
                 
                 const imageUrl = getImageUrl(work);
                 const title = work.text || `Untitled Work ${index + 1}`;
-                const description = work.description || 'クリエイティブなイラストレーション作品です。';
+                const description = work.description || 'クリエイティブなイラストレーション作品です。デジタルアートの魅力を表現した素晴らしい作品をご覧ください。';
                 
-                // 画像の縦横比を推定して縦長カードを決定
-                const isVertical = work.gazou && work.gazou.height && work.gazou.width && 
-                                  (work.gazou.height / work.gazou.width) > 1.2;
-                                  
-                if (isVertical) {
-                    card.classList.add('tall');
-                }
-                
-                card.innerHTML = `
-                    <div class="work-image-container">
-                        <img src="${imageUrl}" alt="${title}" loading="lazy" decoding="async">
-                        <div class="work-overlay-modern">
-                            <div class="work-overlay-content-modern">
-                                <div class="work-overlay-title">${title}</div>
-                            </div>
-                        </div>
+                row.innerHTML = `
+                    <div class="work-image-section" onclick="openFullscreen('${imageUrl}', '${title}')">
+                        <div class="work-index">${String(index + 1).padStart(2, '0')}</div>
+                        <img class="work-image-large" src="${imageUrl}" alt="${title}" loading="lazy" decoding="async">
+                    </div>
+                    <div class="work-content-section">
+                        <h3 class="work-title-large">${title}</h3>
+                        <p class="work-description-large">${description}</p>
                     </div>
                 `;
                 
-                // クリックイベントでフルスクリーン表示
-                card.addEventListener('click', () => openFullscreen(imageUrl, title));
-                
-                container.appendChild(card);
+                container.appendChild(row);
             });
+            
+            // スクロールアニメーションを初期化
+            initScrollAnimation();
         }
 
-        async function fetchWorksModern(){
+        async function fetchWorksAlternating(){
           try {
             if (!CONFIG.API_KEY) {
                 showError("APIキー未設定のため、作品はダミー表示です。");
-                renderWorksModern();
+                renderWorksAlternating();
                 return;
             }
             
@@ -1602,13 +1675,33 @@
                 hideError();
             }
             
-            renderWorksModern();
+            renderWorksAlternating();
           } catch(e) {
             console.error(e);
             worksData = DUMMY_WORKS;
             showError("作品の読込に失敗しました：" + e.message);
-            renderWorksModern();
+            renderWorksAlternating();
           }
+        }
+
+        // スクロールアニメーション
+        function initScrollAnimation() {
+            const rows = document.querySelectorAll('.work-row');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.3,
+                rootMargin: '0px 0px -100px 0px'
+            });
+            
+            rows.forEach(row => {
+                observer.observe(row);
+            });
         }
 
         // フルスクリーン機能
@@ -1799,7 +1892,7 @@
             try {
                 await loadData();
                 renderProfile();
-                fetchWorksModern();
+                fetchWorksAlternating();
                 renderBlog();
                 
                 initTheme();
