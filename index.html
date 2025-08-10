@@ -587,6 +587,8 @@
                     worksResponse = wResponse;
                 }
 
+                console.log('API Responses:', { profileResponse, worksResponse });
+
                 if (profileResponse.status === 'fulfilled') {
                     profileData = profileResponse.value;
                 } else {
@@ -595,27 +597,26 @@
                 }
 
                 if (worksResponse.status === 'fulfilled') {
-                    worksData = worksResponse.value.contents || [];
+                    console.log('Works data loaded:', worksResponse.value);
+                    worksData = worksResponse.value.contents || worksResponse.value || [];
+                    if (worksData.length > 0) {
+                        hideError();
+                    } else {
+                        worksData = DUMMY_WORKS;
+                        showError('作品データがありません。サンプルデータを表示しています。');
+                    }
                 } else {
                     console.warn('Works data failed to load:', worksResponse.reason);
                     worksData = DUMMY_WORKS;
-                    showError();
-                }
-
-                if (worksData.length === 0) {
-                    worksData = DUMMY_WORKS;
-                    showError('作品データがありません。サンプルデータを表示しています。');
+                    showError('Works APIの読み込みに失敗しました: ' + worksResponse.reason);
                 }
 
                 isDataLoaded = true;
-                if (worksResponse.status === 'fulfilled' && worksData.length > 0) {
-                    hideError();
-                }
             } catch (error) {
                 console.error('Data loading failed:', error);
                 profileData = DUMMY_PROFILE;
                 worksData = DUMMY_WORKS;
-                showError();
+                showError('データの読み込み中にエラーが発生しました: ' + error.message);
             }
         }
 
