@@ -524,6 +524,25 @@
             transform: translateY(0);
         }
 
+        /* Works Slide Animations */
+        .work-slide-left {
+            opacity: 0;
+            transform: translateX(-60px) translateY(20px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .work-slide-right {
+            opacity: 0;
+            transform: translateX(60px) translateY(20px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .work-slide-left.visible,
+        .work-slide-right.visible {
+            opacity: 1;
+            transform: translateX(0) translateY(0);
+        }
+
         /* Mobile Styles */
         @media (max-width: 768px) {
             :root {
@@ -829,10 +848,13 @@
 
             worksData.forEach((work, index) => {
                 const workCard = document.createElement('div');
-                workCard.className = 'work-card fade-in';
-                workCard.style.animationDelay = `${index * 0.1}s`;
+                // 左右交互のスライドアニメーション
+                const slideClass = index % 2 === 0 ? 'work-slide-left' : 'work-slide-right';
+                workCard.className = `work-card ${slideClass}`;
+                workCard.style.transitionDelay = `${index * 0.15}s`;
                 
                 const imageUrl = getImageUrl(work);
+                const description = work.description || work.desc || '素晴らしいアートワークとクリエイティブなデザインをお楽しみください。';
                 
                 workCard.innerHTML = `
                     <div class="work-image">
@@ -847,7 +869,7 @@
                     </div>
                     <div class="work-content">
                         <h3 class="work-title">${work.text || `作品 ${index + 1}`}</h3>
-                        <p class="work-description">素晴らしいアートワークとクリエイティブなデザインをお楽しみください。</p>
+                        <p class="work-description">${description}</p>
                     </div>
                 `;
 
@@ -966,7 +988,7 @@
         // Intersection Observer for animations
         function initScrollAnimations() {
             if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                document.querySelectorAll('.fade-in').forEach(el => {
+                document.querySelectorAll('.fade-in, .work-slide-left, .work-slide-right').forEach(el => {
                     el.classList.add('visible');
                 });
                 return;
@@ -979,11 +1001,17 @@
                     }
                 });
             }, {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
+                threshold: 0.2,
+                rootMargin: '0px 0px -100px 0px'
             });
 
+            // 通常のフェードインアニメーション
             document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+
+            // 作品カードのスライドアニメーション
+            document.querySelectorAll('.work-slide-left, .work-slide-right').forEach(el => {
                 observer.observe(el);
             });
         }
