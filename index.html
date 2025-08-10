@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Updated: 2025-08-10 with Modern Rich Card Gallery Layout -->
+<!-- Updated: 2025-08-10 with Fullscreen Modal Image Gallery -->
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -727,15 +727,79 @@
           max-height: 600px;
         }
 
+        /* フルスクリーンモーダル */
+        .fullscreen-modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background: rgba(0, 0, 0, 0.95);
+          display: none;
+          justify-content: center;
+          align-items: center;
+          z-index: 10000;
+          backdrop-filter: blur(20px);
+          animation: modalFadeIn 0.3s ease;
+        }
+
+        .fullscreen-modal.active {
+          display: flex;
+        }
+
+        .fullscreen-image {
+          max-width: 95vw;
+          max-height: 95vh;
+          object-fit: contain;
+          border-radius: 12px;
+          box-shadow: 0 20px 100px rgba(0, 0, 0, 0.5);
+          animation: imageZoomIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-close {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          background: rgba(255, 255, 255, 0.2);
+          border: none;
+          color: white;
+          font-size: 2rem;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          backdrop-filter: blur(10px);
+          transition: background 0.3s ease;
+        }
+
+        .modal-close:hover {
+          background: rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes modalFadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes imageZoomIn {
+          from { 
+            transform: scale(0.8);
+            opacity: 0;
+          }
+          to { 
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+
         /* モバイル対応 */
         @media (max-width: 768px) {
           .works-masonry {
             grid-template-columns: 1fr;
             padding: 0 1rem;
-          }
-          
-          .work-content-modern {
-            padding: 1.5rem;
           }
           
           .work-image-container {
@@ -746,6 +810,14 @@
           .work-card-rich.tall .work-image-container {
             min-height: 300px;
             max-height: 500px;
+          }
+
+          .modal-close {
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            font-size: 1.5rem;
           }
         }
         
@@ -1151,6 +1223,12 @@
         </div>
     </section>
 
+    <!-- Fullscreen Modal -->
+    <div id="fullscreen-modal" class="fullscreen-modal" role="dialog" aria-modal="true">
+        <button class="modal-close" aria-label="Close fullscreen view">×</button>
+        <img id="fullscreen-image" class="fullscreen-image" alt="">
+    </div>
+
     <!-- Blog Section -->
     <section id="blog" class="section" style="background: var(--surface);">
         <div class="container">
@@ -1488,20 +1566,13 @@
                         <div class="work-overlay-modern">
                             <div class="work-overlay-content-modern">
                                 <div class="work-overlay-title">${title}</div>
-                                <div class="work-overlay-desc">${description.substring(0, 60)}...</div>
                             </div>
                         </div>
                     </div>
-                    <div class="work-content-modern">
-                        <h3 class="work-title-modern">${title}</h3>
-                        <p class="work-description-modern">${description}</p>
-                        <div class="work-tags-modern">
-                            <span class="work-tag-modern">Illustration</span>
-                            <span class="work-tag-modern">Digital Art</span>
-                            <span class="work-tag-modern">Creative</span>
-                        </div>
-                    </div>
                 `;
+                
+                // クリックイベントでフルスクリーン表示
+                card.addEventListener('click', () => openFullscreen(imageUrl, title));
                 
                 container.appendChild(card);
             });
@@ -1539,6 +1610,50 @@
             renderWorksModern();
           }
         }
+
+        // フルスクリーン機能
+        function openFullscreen(imageUrl, title) {
+            const modal = document.getElementById('fullscreen-modal');
+            const image = document.getElementById('fullscreen-image');
+            
+            image.src = imageUrl;
+            image.alt = title;
+            modal.classList.add('active');
+            
+            // bodyのスクロールを無効化
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeFullscreen() {
+            const modal = document.getElementById('fullscreen-modal');
+            modal.classList.remove('active');
+            
+            // bodyのスクロールを有効化
+            document.body.style.overflow = '';
+        }
+
+        // モーダルのイベントリスナー
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('fullscreen-modal');
+            const closeBtn = modal.querySelector('.modal-close');
+            
+            // 閉じるボタン
+            closeBtn.addEventListener('click', closeFullscreen);
+            
+            // モーダル背景クリック
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeFullscreen();
+                }
+            });
+            
+            // ESCキー
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('active')) {
+                    closeFullscreen();
+                }
+            });
+        });
 
         function renderBlog() {
             const blogGrid = document.getElementById('blog-grid');
