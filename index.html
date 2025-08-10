@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Updated: 2025-08-10 with Flexbox Gallery Layout -->
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -605,27 +606,28 @@
         }
 
         .works-deck .deck{
-          position:relative;
-          height:calc(var(--deck-thumb-h) + 80px);
-          margin-top:40px;
-          overflow:visible;
-          padding:0 30px;
-          min-height: 240px;
+          display: flex;
+          justify-content: center;
+          align-items: flex-end;
+          gap: clamp(8px, 2vw, 20px);
+          margin-top: 50px;
+          padding: 0 20px;
+          height: calc(var(--thumb-base-h) + 100px);
+          overflow: visible;
         }
         
         .works-deck .thumb{
-          position:absolute;
-          top:0;
-          width:var(--deck-thumb-w);
-          height:var(--deck-thumb-h);
-          border-radius:16px;
-          overflow:hidden;
-          background:var(--surface);
-          border:2px solid var(--border);
-          transform-origin:center bottom;
-          transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow:0 8px 25px var(--shadow);
-          cursor:pointer;
+          flex: 0 0 auto;
+          width: clamp(200px, 18vw, var(--thumb-base-w));
+          height: clamp(130px, 12vw, var(--thumb-base-h));
+          border-radius: 20px;
+          overflow: hidden;
+          background: var(--surface);
+          border: 3px solid var(--border);
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 12px 40px var(--shadow);
+          cursor: pointer;
+          transform-origin: center bottom;
         }
         
         [data-theme="dark"] .works-deck .thumb {
@@ -679,10 +681,21 @@
           }
           
           .works-deck .deck{
-            height:calc(var(--deck-thumb-h) + 60px);
-            margin-top:30px;
-            padding:0 20px;
-            min-height: 190px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: clamp(4px, 1vw, 12px);
+            height:calc(var(--thumb-base-h) + 80px);
+            margin-top:40px;
+            padding:0 10px;
+          }
+          
+          .works-deck .thumb{
+            flex: 0 0 auto;
+            width: clamp(180px, 25vw, 240px);
+            height: clamp(120px, 16vw, 160px);
+            border-radius: 16px;
+            border-width: 2px;
           }
           
           .works-deck .caption{
@@ -1171,35 +1184,17 @@
           });
         }
         function layoutDeck(){
+          // Flexboxレイアウトで自動処理されるので、ポジション配列だけ更新
           const deck = document.getElementById('deck');
-          const container = deck.parentElement;
-          const W = container.clientWidth - 60; // パディングを増やす
-          const n = WORKS.items.length;
-          if(n===0) return;
-
-          const tw = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--deck-thumb-w')) || 240;
-          const overlap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--deck-overlap')) || 90;
-
-          const total = tw + (n-1)*overlap;
+          const thumbs = deck.querySelectorAll('.thumb');
           
-          // 画面幅に収まらない場合は重なりを調整
-          let actualOverlap = overlap;
-          if (total > W) {
-            actualOverlap = Math.max(40, (W - tw) / (n-1)); // 最小40px重なり
-          }
-          
-          const actualTotal = tw + (n-1)*actualOverlap;
-          const left0 = Math.max(30, (W-actualTotal)/2); // 左右マージン確保
-
           WORKS.positions = [];
-          document.querySelectorAll('#deck .thumb').forEach((el, i)=>{
-            const left = left0 + i*actualOverlap;
-            el.style.left = left + 'px';
+          thumbs.forEach((el, i) => {
+            const rect = el.getBoundingClientRect();
+            const deckRect = deck.getBoundingClientRect();
+            const centerX = rect.left - deckRect.left + rect.width / 2;
+            WORKS.positions.push(centerX);
             el.style.zIndex = 10 + i;
-            // 軽い傾きで重なり感
-            const rot = Math.max(-2, Math.min(2, (i - (n-1)/2) * 0.3));
-            el.style.transform = `rotate(${rot}deg)`;
-            WORKS.positions.push(left + tw/2); // 中心座標
           });
         }
         function nearestIndex(xClient){
