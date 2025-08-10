@@ -1214,7 +1214,7 @@
           return best;
         }
         function initDeck(items){
-          WORKS.items = items.slice(0, 6); // 5〜6枚ほどに絞る
+          WORKS.items = items.slice(0, 8); // 最大8作品まで表示
           const deck = document.getElementById('deck');
           deck.innerHTML = "";
 
@@ -1224,6 +1224,7 @@
             document.getElementById('stageDesc').textContent  = "microCMSの spec に追加すると自動で表示されます。";
             return;
           }
+          
           WORKS.items.forEach((it, i)=>{
             const a = document.createElement('button');
             a.type = "button";
@@ -1236,23 +1237,32 @@
             deck.appendChild(a);
           });
 
-          layoutDeck();
-          setActive(0);
+          // レイアウトを初期化
+          setTimeout(() => {
+            layoutDeck();
+            setActive(0);
+          }, 100);
 
-          // pointermove で"横に少し動かすと次の画像"を実現
+          // pointermoveでスムーズな切り替え
           deck.addEventListener('pointermove', (e)=>{
             const i = nearestIndex(e.clientX);
             if(i !== WORKS.active) setActive(i);
           });
 
-          // キーボード操作（←/→）
-          window.addEventListener('keydown', (e)=>{
-            if(e.key === 'ArrowRight') setActive(WORKS.active+1);
-            if(e.key === 'ArrowLeft')  setActive(WORKS.active-1);
-          });
+          // キーボード操作
+          let keydownHandler = (e)=>{
+            if(e.key === 'ArrowRight') { e.preventDefault(); setActive(WORKS.active+1); }
+            if(e.key === 'ArrowLeft')  { e.preventDefault(); setActive(WORKS.active-1); }
+          };
+          window.removeEventListener('keydown', keydownHandler);
+          window.addEventListener('keydown', keydownHandler);
 
-          // リサイズで再レイアウト
-          window.addEventListener('resize', layoutDeck);
+          // リサイズハンドラ
+          let resizeHandler = () => {
+            setTimeout(layoutDeck, 100);
+          };
+          window.removeEventListener('resize', resizeHandler);
+          window.addEventListener('resize', resizeHandler);
         }
 
         // 既存の fetchWorks 呼び出しを、この deck 用に差し替え
