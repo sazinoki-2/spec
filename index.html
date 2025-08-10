@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="site-title">Portfolio</title>
+    <style>
+        /* CSS Variables */
+        :root {
+            --header-h: 220px;
+            --avatar: 120px;
+            --primary-color: #1a1a1a;
+            --secondary-color: #666;
+            --accent-color: #0066cc;
+            --background-color: #ffffff;
+            --card-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --border-radius: 12px;
+        }
+
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--primary-color);
+            background: var(--background-color);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Header Cover */
+        .header-cover {
+            height: var(--header-h);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            position: relative;
+            padding: 0 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .profile-content {
+            margin-top: calc(-1 * var(--avatar) / 2);
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .profile-avatar {
+            width: var(--avatar);
+            height: var(--avatar);
+            border-radius: 50%;
+            border: 4px solid white;
+            object-fit: cover;
+            background: #f0f0f0;
+        }
+
+        .profile-info {
+            flex: 1;
+            margin-top: calc(var(--avatar) / 2);
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .profile-tagline {
+            color: var(--secondary-color);
+            margin-bottom: 16px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        /* Navigation */
+        .nav-menu {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #eee;
+            z-index: 100;
+            padding: 12px 0;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav-list {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-weight: 500;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--accent-color);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--accent-color);
+        }
+
+        /* Sections */
+        .section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            scroll-margin-top: 80px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        /* Works Section */
+        .works-grid {
+            display: grid;
+            gap: 80px;
+        }
+
+        .work-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.6s ease;
+        }
+
+        .work-item.animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .work-item:nth-child(even) {
+            direction: rtl;
+        }
+
+        .work-item:nth-child(even) > * {
+            direction: ltr;
+        }
+
+        .work-image {
+            min-height: 60vh;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .work-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            loading: lazy;
+            decoding: async;
+        }
+
+        .work-image img.portrait {
+            object-fit: cover;
+            transform: scale(1.05);
+        }
+
+        .work-image img.landscape {
+            object-fit: cover;
+        }
+
+        .work-content h3 {
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .work-content p {
+            color: var(--secondary-color);
+            line-height: 1.8;
+        }
+
+        /* Blog Section */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            transition: transform 0.2s;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .blog-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .blog-card-content {
+            padding: 20px;
+        }
+
+        .blog-card h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        /* Contacts Section */
+        .contacts {
+            text-align: center;
+        }
+
+        .contact-email {
+            font-size: 20px;
+            color: var(--accent-color);
+            text-decoration: none;
+            border: 2px solid var(--accent-color);
+            padding: 16px 32px;
+            border-radius: var(--border-radius);
+            display: inline-block;
+            transition: all 0.2s;
+        }
+
+        .contact-email:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        /* Error Banner */
+        .error-banner {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 12px 20px;
+            margin: 20px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            display: none;
+        }
+
+        /* Loading States */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: var(--border-radius);
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            :root {
+                --header-h: 160px;
+                --avatar: 80px;
+            }
+
+            .profile-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-info {
+                margin-top: 0;
+            }
+
+            .nav-list {
+                gap: 16px;
+                font-size: 14px;
+            }
+
+            .work-item {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .work-item:nth-child(even) {
+                direction: ltr;
+            }
+
+            .work-image {
+                min-height: 40vh;
+            }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            .work-item,
+            .btn,
+            .blog-card {
+                transition: none;
+            }
+
+            .work-item {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Focus styles */
+        .btn:focus,
+        .nav-link:focus,
+        .contact-email:focus {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Settings -->
+    <script>
+        // Configuration
+        const CONFIG = {
+            SITE_TITLE: 'Portfolio',
+            CONTACT_EMAIL: 'contact@example.com',
+            HEADER_BG: '', // Background image URL or empty for gradient
+            SERVICE: '', // microCMS service name
+            ENDPOINT: 'spec',
+            PROFILE_ENDPOINT: 'profile',
+            API_KEY: '' // Content API key - set this value
+        };
+
+        // Dummy data for fallback
+        const DUMMY_PROFILE = {
+            title: 'Your Name',
+            tagline: 'Creative Professional',
+            email: 'contact@example.com',
+            avatar: { url: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><rect width="120" height="120" fill="%23ddd"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="14" fill="%23999">Avatar</text></svg>' }
+        };
+
+        const DUMMY_WORKS = [
+            {
+                text: 'Sample Work 1',
+                gazou: { url: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600"><rect width="800" height="600" fill="%23e0e0e0"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="24" fill="%23999">Work Image 1</text></svg>' }
+            },
+            {
+                text: 'Sample Work 2', 
+                gazou: { url: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800"><rect width="600" height="800" fill="%23e0e0e0"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="24" fill="%23999">Work Image 2</text></svg>' }
+            }
+        ];
+
+        const DUMMY_BLOG = [
+            { title: 'Blog Post 1', url: 'https://note.com/', img: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23f0f0f0"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="14" fill="%23999">Blog 1</text></svg>' },
+            { title: 'Blog Post 2', url: 'https://note.com/', img: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23f0f0f0"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="14" fill="%23999">Blog 2</text></svg>' },
+            { title: 'Blog Post 3', url: 'https://note.com/', img: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23f0f0f0"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="14" fill="%23999">Blog 3</text></svg>' },
+            { title: 'Blog Post 4', url: 'https://note.com/', img: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23f0f0f0"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="14" fill="%23999">Blog 4</text></svg>' },
+            { title: 'Blog Post 5', url: 'https://note.com/', img: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23f0f0f0"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="14" fill="%23999">Blog 5</text></svg>' },
+            { title: 'Blog Post 6', url: 'https://note.com/', img: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23f0f0f0"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="14" fill="%23999">Blog 6</text></svg>' },
+            { title: 'Blog Post 7', url: 'https://note.com/', img: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23f0f0f0"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="14" fill="%23999">Blog 7</text></svg>' },
+            { title: 'Blog Post 8', url: 'https://note.com/', img: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23f0f0f0"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="14" fill="%23999">Blog 8</text></svg>' },
+            { title: 'Blog Post 9', url: 'https://note.com/', img: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23f0f0f0"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="14" fill="%23999">Blog 9</text></svg>' }
+        ];
+    </script>
+
+    <!-- Error Banner -->
+    <div id="error-banner" class="error-banner" role="alert" aria-live="polite">
+        <p>データの読み込みに失敗しました。サンプルデータを表示しています。</p>
+    </div>
+
+    <!-- Header Cover -->
+    <header class="header-cover" id="header-cover">
+        <span class="sr-only">ヘッダー画像</span>
+    </header>
+
+    <!-- Profile Section -->
+    <section class="profile-section">
+        <div class="profile-content">
+            <img id="profile-avatar" class="profile-avatar" alt="プロフィール画像" src="">
+            <div class="profile-info">
+                <h1 id="profile-name" class="profile-name">Loading...</h1>
+                <p id="profile-tagline" class="profile-tagline">Loading...</p>
+                <div class="cta-buttons">
+                    <a href="#works" class="btn btn-primary">作品を見る</a>
+                    <a href="#blog" class="btn btn-secondary">ブログ</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigation -->
+    <nav class="nav-menu" role="navigation" aria-label="メインメニュー">
+        <div class="nav-content">
+            <ul class="nav-list">
+                <li><a href="#profile" class="nav-link active">Profile</a></li>
+                <li><a href="#works" class="nav-link">Works</a></li>
+                <li><a href="#blog" class="nav-link">Blog</a></li>
+                <li><a href="#contacts" class="nav-link">Contacts</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Works Section -->
+        <section id="works" class="section">
+            <h2 class="section-title">Works</h2>
+            <div id="works-grid" class="works-grid">
+                <!-- Works will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Blog Section -->
+        <section id="blog" class="section">
+            <h2 class="section-title">Blog</h2>
+            <div id="blog-grid" class="blog-grid">
+                <!-- Blog will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Contacts Section -->
+        <section id="contacts" class="section contacts">
+            <h2 class="section-title">Contacts</h2>
+            <a id="contact-email" href="" class="contact-email">
+                お問い合わせ
+            </a>
+        </section>
+    </main>
+
+    <script>
+        // Global state
+        let profileData = null;
+        let worksData = [];
+        let isDataLoaded = false;
+
+        // Utility functions
+        function showError(message) {
+            const errorBanner = document.getElementById('error-banner');
+            errorBanner.querySelector('p').textContent = message || 'データの読み込みに失敗しました。サンプルデータを表示しています。';
+            errorBanner.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('error-banner').style.display = 'none';
+        }
+
+        function getImageUrl(work) {
+            if (work.gazous && work.gazous.length > 0 && work.gazous[0].url) {
+                return work.gazous[0].url;
+            }
+            if (work.gazou && work.gazou.url) {
+                return work.gazou.url;
+            }
+            return 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600"><rect width="800" height="600" fill="%23e0e0e0"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="24" fill="%23999">No Image</text></svg>';
+        }
+
+        function detectImageOrientation(img) {
+            return new Promise((resolve) => {
+                const testImg = new Image();
+                testImg.onload = () => {
+                    const isPortrait = testImg.naturalHeight > testImg.naturalWidth;
+                    resolve(isPortrait ? 'portrait' : 'landscape');
+                };
+                testImg.onerror = () => resolve('landscape');
+                testImg.src = img.src;
+            });
+        }
+
+        // API functions
+        async function fetchMicroCMS(endpoint) {
+            if (!CONFIG.SERVICE || !CONFIG.API_KEY) {
+                throw new Error('Service or API key not configured');
+            }
+
+            const url = `https://${CONFIG.SERVICE}.microcms.io/api/v1/${endpoint}`;
+            const response = await fetch(url, {
+                headers: {
+                    'X-MICROCMS-API-KEY': CONFIG.API_KEY
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            return response.json();
+        }
+
+        async function loadData() {
+            try {
+                // Load profile and works in parallel
+                const [profileResponse, worksResponse] = await Promise.allSettled([
+                    fetchMicroCMS(CONFIG.PROFILE_ENDPOINT),
+                    fetchMicroCMS(CONFIG.ENDPOINT)
+                ]);
+
+                if (profileResponse.status === 'fulfilled') {
+                    profileData = profileResponse.value;
+                } else {
+                    console.warn('Profile data failed to load:', profileResponse.reason);
+                    profileData = DUMMY_PROFILE;
+                }
+
+                if (worksResponse.status === 'fulfilled') {
+                    worksData = worksResponse.value.contents || [];
+                } else {
+                    console.warn('Works data failed to load:', worksResponse.reason);
+                    worksData = DUMMY_WORKS;
+                    showError();
+                }
+
+                if (worksData.length === 0) {
+                    worksData = DUMMY_WORKS;
+                    showError('作品データがありません。サンプルデータを表示しています。');
+                }
+
+                isDataLoaded = true;
+                hideError();
+            } catch (error) {
+                console.error('Data loading failed:', error);
+                profileData = DUMMY_PROFILE;
+                worksData = DUMMY_WORKS;
+                showError();
+            }
+        }
+
+        // Render functions
+        function renderProfile() {
+            const profile = profileData || DUMMY_PROFILE;
+            
+            // Update page title
+            document.title = profile.title || CONFIG.SITE_TITLE;
+            document.getElementById('site-title').textContent = profile.title || CONFIG.SITE_TITLE;
+            
+            // Update profile section
+            document.getElementById('profile-name').textContent = profile.title || 'Your Name';
+            document.getElementById('profile-tagline').textContent = profile.tagline || 'Creative Professional';
+            
+            const avatar = document.getElementById('profile-avatar');
+            avatar.src = profile.avatar?.url || DUMMY_PROFILE.avatar.url;
+            avatar.alt = `${profile.title || 'Your Name'}のプロフィール画像`;
+            
+            // Update contact email
+            const email = profile.email || CONFIG.CONTACT_EMAIL;
+            document.getElementById('contact-email').href = `mailto:${email}`;
+            
+            // Update header background if configured
+            if (CONFIG.HEADER_BG) {
+                document.getElementById('header-cover').style.backgroundImage = `url(${CONFIG.HEADER_BG})`;
+            }
+        }
+
+        function renderWorks() {
+            const worksGrid = document.getElementById('works-grid');
+            worksGrid.innerHTML = '';
+
+            worksData.forEach((work, index) => {
+                const workItem = document.createElement('div');
+                workItem.className = 'work-item';
+                workItem.style.marginTop = `${(index % 3) * 40}px`; // Staggered offset
+                
+                const imageUrl = getImageUrl(work);
+                
+                workItem.innerHTML = `
+                    <div class="work-image">
+                        <img src="${imageUrl}" 
+                             alt="${work.text || `作品 ${index + 1}`}"
+                             loading="lazy" 
+                             decoding="async">
+                    </div>
+                    <div class="work-content">
+                        <h3>${work.text || `作品 ${index + 1}`}</h3>
+                        <p>This is a sample work description. Replace this text with actual work descriptions from your CMS.</p>
+                    </div>
+                `;
+
+                // Detect image orientation after loading
+                const img = workItem.querySelector('img');
+                img.onload = async () => {
+                    const orientation = await detectImageOrientation(img);
+                    img.classList.add(orientation);
+                };
+
+                worksGrid.appendChild(workItem);
+            });
+        }
+
+        function renderBlog() {
+            const blogGrid = document.getElementById('blog-grid');
+            blogGrid.innerHTML = '';
+
+            DUMMY_BLOG.forEach(post => {
+                const blogCard = document.createElement('a');
+                blogCard.className = 'blog-card';
+                blogCard.href = post.url;
+                blogCard.target = '_blank';
+                blogCard.rel = 'noopener noreferrer';
+                blogCard.innerHTML = `
+                    <img src="${post.img}" alt="${post.title}のアイキャッチ画像" loading="lazy" decoding="async">
+                    <div class="blog-card-content">
+                        <h3>${post.title}</h3>
+                    </div>
+                `;
+                blogGrid.appendChild(blogCard);
+            });
+        }
+
+        // Animation and interaction
+        function initIntersectionObserver() {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                // If reduced motion is preferred, show all items immediately
+                document.querySelectorAll('.work-item').forEach(item => {
+                    item.classList.add('animate-in');
+                });
+                return;
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-in');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            document.querySelectorAll('.work-item').forEach(item => {
+                observer.observe(item);
+            });
+        }
+
+        function initSmoothScroll() {
+            document.querySelectorAll('.nav-link, .btn[href^="#"]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    
+                    if (targetSection) {
+                        targetSection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        function initActiveNavigation() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.section, .profile-section');
+
+            function updateActiveNav() {
+                let currentSection = '';
+                const scrollPos = window.scrollY + 100;
+
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.offsetHeight;
+                    
+                    if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                        currentSection = section.id || 'profile';
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${currentSection}`) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            // Throttle scroll events for performance
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        updateActiveNav();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+        }
+
+        // Initialize everything
+        async function init() {
+            try {
+                await loadData();
+                renderProfile();
+                renderWorks();
+                renderBlog();
+                
+                // Initialize interactions after rendering
+                setTimeout(() => {
+                    initIntersectionObserver();
+                    initSmoothScroll();
+                    initActiveNavigation();
+                }, 100);
+                
+            } catch (error) {
+                console.error('Initialization failed:', error);
+                showError('サイトの初期化に失敗しました。');
+            }
+        }
+
+        // Start when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>
