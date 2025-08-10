@@ -556,17 +556,27 @@
             }
 
             const url = `https://${CONFIG.SERVICE}.microcms.io/api/v1/${endpoint}`;
+            console.log('Fetching URL:', url);
+            console.log('Using API Key:', CONFIG.API_KEY);
+            
             const response = await fetch(url, {
                 headers: {
                     'X-MICROCMS-API-KEY': CONFIG.API_KEY
                 }
             });
 
+            console.log('Response status:', response.status);
+            console.log('Response headers:', [...response.headers.entries()]);
+
             if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
+                const errorText = await response.text();
+                console.error('Error response body:', errorText);
+                throw new Error(`HTTP ${response.status}: ${errorText}`);
             }
 
-            return response.json();
+            const data = await response.json();
+            console.log('Success response:', data);
+            return data;
         }
 
         async function loadData() {
