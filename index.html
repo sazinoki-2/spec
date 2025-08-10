@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Updated: 2025-08-10 with Alternating Scroll Gallery Layout -->
+<!-- Updated: 2025-08-10 with Professional Corporate Gallery Layout -->
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -554,30 +554,30 @@
         }
 
         .works-rich {
-          padding: 6rem 0;
-          background: var(--background);
+          padding: 8rem 0;
+          background: #fafafa;
         }
 
         [data-theme="dark"] .works-rich {
-          background: #0a0a0f;
+          background: #0f0f0f;
         }
         
         .works-alternating {
-          max-width: 1400px;
+          max-width: 1600px;
           margin: 0 auto;
-          padding: 0 2rem;
+          padding: 0 4rem;
         }
         
         .work-row {
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 4rem;
+          grid-template-columns: 55fr 45fr;
+          gap: 8rem;
           align-items: center;
-          margin-bottom: 8rem;
-          min-height: 80vh;
+          margin-bottom: 12rem;
+          min-height: 85vh;
           opacity: 0;
-          transform: translateY(60px);
-          transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+          transform: translateY(40px);
+          transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .work-row.visible {
@@ -586,6 +586,7 @@
         }
 
         .work-row.reverse {
+          grid-template-columns: 45fr 55fr;
           direction: rtl;
         }
 
@@ -596,64 +597,68 @@
         .work-image-section {
           position: relative;
           cursor: pointer;
+          overflow: hidden;
         }
 
         .work-image-large {
           width: 100%;
           height: auto;
-          min-height: 400px;
-          max-height: 600px;
+          min-height: 500px;
+          max-height: 700px;
           object-fit: contain;
-          border-radius: var(--card-radius);
-          box-shadow: var(--card-shadow);
-          transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-          background: var(--surface);
+          border-radius: 4px;
+          box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+          transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+          background: #ffffff;
+          border: 1px solid rgba(0, 0, 0, 0.04);
         }
 
         [data-theme="dark"] .work-image-large {
-          background: #1a1a24;
-          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+          background: #1a1a1a;
+          border-color: rgba(255, 255, 255, 0.08);
+          box-shadow: 0 4px 32px rgba(0, 0, 0, 0.3);
         }
 
         .work-image-large:hover {
-          transform: translateY(-8px) scale(1.02);
-          box-shadow: var(--card-shadow-hover);
+          transform: scale(1.03);
+          box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
         }
 
         .work-content-section {
-          padding: 2rem 0;
+          padding: 4rem 0;
         }
 
         .work-title-large {
-          font-size: clamp(2rem, 5vw, 3.5rem);
-          font-weight: var(--font-weight-bold);
-          margin-bottom: 1.5rem;
-          color: var(--text-primary);
-          line-height: 1.2;
+          font-size: clamp(2.5rem, 4vw, 4rem);
+          font-weight: 300;
+          margin-bottom: 0;
+          color: #1a1a1a;
+          line-height: 1.1;
+          letter-spacing: -0.02em;
+          font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
-        .work-description-large {
-          font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-          color: var(--text-secondary);
-          line-height: 1.8;
+        [data-theme="dark"] .work-title-large {
+          color: #ffffff;
+        }
+
+        .work-category {
+          font-size: 0.9rem;
+          color: #888;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
           margin-bottom: 2rem;
+          font-weight: 500;
         }
 
-        .work-index {
+        .work-year {
           position: absolute;
-          top: -1rem;
-          left: -1rem;
-          background: var(--accent);
-          color: white;
-          width: 60px;
-          height: 60px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 1.5rem;
-          font-weight: var(--font-weight-bold);
-          box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+          top: -2rem;
+          right: 0;
+          font-size: 0.85rem;
+          color: #999;
+          font-weight: 400;
+          letter-spacing: 0.05em;
         }
 
         .work-image-container {
@@ -790,116 +795,84 @@
           max-height: 600px;
         }
 
-        /* フルスクリーンモーダル */
-        .fullscreen-modal {
+        /* インプレース拡大 */
+        .work-image-expanded {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%) scale(1.5);
+          z-index: 10000;
+          max-width: 90vw;
+          max-height: 90vh;
+          border-radius: 4px;
+          box-shadow: 0 20px 100px rgba(0, 0, 0, 0.3);
+          transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+          background: #ffffff;
+          border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] .work-image-expanded {
+          background: #1a1a1a;
+          border-color: rgba(255, 255, 255, 0.1);
+          box-shadow: 0 20px 100px rgba(0, 0, 0, 0.6);
+        }
+
+        .backdrop {
           position: fixed;
           top: 0;
           left: 0;
           width: 100vw;
           height: 100vh;
-          background: rgba(0, 0, 0, 0.95);
-          display: none;
-          justify-content: center;
-          align-items: center;
-          z-index: 10000;
-          backdrop-filter: blur(20px);
-          animation: modalFadeIn 0.3s ease;
-        }
-
-        .fullscreen-modal.active {
-          display: flex;
-        }
-
-        .fullscreen-image {
-          max-width: 95vw;
-          max-height: 95vh;
-          object-fit: contain;
-          border-radius: 12px;
-          box-shadow: 0 20px 100px rgba(0, 0, 0, 0.5);
-          animation: imageZoomIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .modal-close {
-          position: absolute;
-          top: 20px;
-          right: 20px;
-          background: rgba(255, 255, 255, 0.2);
-          border: none;
-          color: white;
-          font-size: 2rem;
-          width: 50px;
-          height: 50px;
-          border-radius: 50%;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          background: rgba(250, 250, 250, 0.95);
+          z-index: 9999;
+          opacity: 0;
+          transition: opacity 0.4s ease;
           backdrop-filter: blur(10px);
-          transition: background 0.3s ease;
         }
 
-        .modal-close:hover {
-          background: rgba(255, 255, 255, 0.3);
+        [data-theme="dark"] .backdrop {
+          background: rgba(15, 15, 15, 0.95);
         }
 
-        @keyframes modalFadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-
-        @keyframes imageZoomIn {
-          from { 
-            transform: scale(0.8);
-            opacity: 0;
-          }
-          to { 
-            transform: scale(1);
-            opacity: 1;
-          }
+        .backdrop.active {
+          opacity: 1;
         }
 
         /* モバイル対応 */
         @media (max-width: 768px) {
           .works-alternating {
-            padding: 0 1rem;
+            padding: 0 2rem;
           }
 
           .work-row {
             grid-template-columns: 1fr;
-            gap: 2rem;
-            margin-bottom: 6rem;
+            gap: 3rem;
+            margin-bottom: 8rem;
             min-height: auto;
           }
 
           .work-row.reverse {
             direction: ltr;
+            grid-template-columns: 1fr;
           }
 
           .work-image-large {
-            min-height: 300px;
-            max-height: 450px;
+            min-height: 400px;
+            max-height: 500px;
           }
 
           .work-title-large {
-            font-size: clamp(1.8rem, 8vw, 2.5rem);
+            font-size: clamp(2rem, 8vw, 2.8rem);
           }
 
-          .work-description-large {
-            font-size: 1.1rem;
+          .work-content-section {
+            padding: 2rem 0;
           }
 
-          .work-index {
-            width: 50px;
-            height: 50px;
-            font-size: 1.2rem;
-          }
-
-          .modal-close {
-            top: 10px;
-            right: 10px;
-            width: 40px;
-            height: 40px;
-            font-size: 1.5rem;
+          .work-image-expanded {
+            transform: translate(-50%, -50%) scale(1.2);
+            max-width: 95vw;
+            max-height: 95vh;
           }
         }
         
@@ -1305,11 +1278,8 @@
         </div>
     </section>
 
-    <!-- Fullscreen Modal -->
-    <div id="fullscreen-modal" class="fullscreen-modal" role="dialog" aria-modal="true">
-        <button class="modal-close" aria-label="Close fullscreen view">×</button>
-        <img id="fullscreen-image" class="fullscreen-image" alt="">
-    </div>
+    <!-- Image Backdrop -->
+    <div id="backdrop" class="backdrop"></div>
 
     <!-- Blog Section -->
     <section id="blog" class="section" style="background: var(--surface);">
@@ -1634,13 +1604,13 @@
                 const description = work.description || 'クリエイティブなイラストレーション作品です。デジタルアートの魅力を表現した素晴らしい作品をご覧ください。';
                 
                 row.innerHTML = `
-                    <div class="work-image-section" onclick="openFullscreen('${imageUrl}', '${title}')">
-                        <div class="work-index">${String(index + 1).padStart(2, '0')}</div>
+                    <div class="work-image-section" onclick="expandImage(this.querySelector('img'))">
                         <img class="work-image-large" src="${imageUrl}" alt="${title}" loading="lazy" decoding="async">
                     </div>
                     <div class="work-content-section">
+                        <div class="work-year">2024</div>
+                        <div class="work-category">Illustration</div>
                         <h3 class="work-title-large">${title}</h3>
-                        <p class="work-description-large">${description}</p>
                     </div>
                 `;
                 
@@ -1704,46 +1674,62 @@
             });
         }
 
-        // フルスクリーン機能
-        function openFullscreen(imageUrl, title) {
-            const modal = document.getElementById('fullscreen-modal');
-            const image = document.getElementById('fullscreen-image');
+        // インプレース拡大機能
+        let expandedImage = null;
+        let originalStyle = null;
+
+        function expandImage(img) {
+            if (expandedImage) return;
             
-            image.src = imageUrl;
-            image.alt = title;
-            modal.classList.add('active');
+            const backdrop = document.getElementById('backdrop');
+            expandedImage = img;
             
-            // bodyのスクロールを無効化
+            // 元のスタイルを保存
+            originalStyle = {
+                position: img.style.position,
+                top: img.style.top,
+                left: img.style.left,
+                transform: img.style.transform,
+                zIndex: img.style.zIndex,
+                maxWidth: img.style.maxWidth,
+                maxHeight: img.style.maxHeight
+            };
+            
+            // 拡大表示
+            img.classList.add('work-image-expanded');
+            backdrop.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
-        function closeFullscreen() {
-            const modal = document.getElementById('fullscreen-modal');
-            modal.classList.remove('active');
+        function collapseImage() {
+            if (!expandedImage) return;
             
-            // bodyのスクロールを有効化
+            const backdrop = document.getElementById('backdrop');
+            
+            // 元のスタイルに戻す
+            expandedImage.classList.remove('work-image-expanded');
+            Object.keys(originalStyle).forEach(prop => {
+                expandedImage.style[prop] = originalStyle[prop];
+            });
+            
+            backdrop.classList.remove('active');
             document.body.style.overflow = '';
+            
+            expandedImage = null;
+            originalStyle = null;
         }
 
-        // モーダルのイベントリスナー
+        // イベントリスナー
         document.addEventListener('DOMContentLoaded', () => {
-            const modal = document.getElementById('fullscreen-modal');
-            const closeBtn = modal.querySelector('.modal-close');
+            const backdrop = document.getElementById('backdrop');
             
-            // 閉じるボタン
-            closeBtn.addEventListener('click', closeFullscreen);
-            
-            // モーダル背景クリック
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    closeFullscreen();
-                }
-            });
+            // 背景クリック
+            backdrop.addEventListener('click', collapseImage);
             
             // ESCキー
             document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && modal.classList.contains('active')) {
-                    closeFullscreen();
+                if (e.key === 'Escape' && expandedImage) {
+                    collapseImage();
                 }
             });
         });
